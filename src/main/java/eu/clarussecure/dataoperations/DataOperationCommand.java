@@ -29,7 +29,7 @@ public abstract class DataOperationCommand extends DataOperationResult {
      * data is the responsibility of the module
      * developer.
      */
-    protected InputStream extraBinaryContent;
+    protected InputStream[] extraBinaryContent;
 
     /**
      * Mapping between the original attribute names
@@ -57,7 +57,7 @@ public abstract class DataOperationCommand extends DataOperationResult {
         return extraProtectedAttributeNames;
     }
 
-    public InputStream getExtraBinaryContent() {
+    public InputStream[] getExtraBinaryContent() {
         return extraBinaryContent;
     }
 
