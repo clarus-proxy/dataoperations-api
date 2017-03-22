@@ -1,6 +1,7 @@
 package eu.clarussecure.dataoperations;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * CLARUS Data Operation module interface.
@@ -51,5 +52,5 @@ public interface DataOperation {
      * @param attributeNames unprotected attribute names.
      * @return a List of Mapping objects.
      */
-    public List<Mapping> head(String[] attributeNames);
+    public List<Map<String,String>> head(String[] attributeNames);
 }

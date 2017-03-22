@@ -1,6 +1,7 @@
 package eu.clarussecure.dataoperations;
 
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * Parent class for data objects returned by several
@@ -34,7 +35,7 @@ public abstract class DataOperationCommand extends DataOperationResult {
      * Mapping between the original attribute names
      * and the protected attribute names.
      */
-    protected Mapping mapping;
+    protected Map<String,String> mapping;
 
     /**
      * Protected content. Formatted the same
@@ -60,7 +61,7 @@ public abstract class DataOperationCommand extends DataOperationResult {
         return extraBinaryContent;
     }
 
-    public Mapping getMapping() {
+    public Map<String,String> getMapping() {
         return mapping;
     }
 
