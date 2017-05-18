@@ -72,4 +72,28 @@ public abstract class DataOperationCommand extends DataOperationResult {
     public String[][] getProtectedContents() {
         return protectedContents;
     }
+
+    public void setProtectedAttributeNames(String[] protectedAttributeNames) {
+        this.protectedAttributeNames = protectedAttributeNames;
+    }
+
+    public void setExtraProtectedAttributeNames(String[] extraProtectedAttributeNames) {
+        this.extraProtectedAttributeNames = extraProtectedAttributeNames;
+    }
+
+    public void setExtraBinaryContent(InputStream[] extraBinaryContent) {
+        this.extraBinaryContent = extraBinaryContent;
+    }
+
+    public void setMapping(Map<String, String> mapping) {
+        this.mapping = mapping;
+    }
+
+    public void setProtectedContents(String[][] protectedContents) {
+        this.protectedContents = protectedContents;
+    }
+
+    public void setCriteria(Criteria[] criteria) {
+        this.criteria = criteria;
+    }
 }
