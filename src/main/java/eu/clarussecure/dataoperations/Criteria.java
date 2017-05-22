@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * Created URV.
+ * TODO: Changes needed to support nested criterias in the shape of a tree.
  */
 public class Criteria implements Serializable {
     private String attributeName;
