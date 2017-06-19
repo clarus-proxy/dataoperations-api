@@ -30,4 +30,7 @@ public abstract class DataOperationResult implements Serializable {
         return attributeNames;
     }
 
+    public void setAttributeNames(String[] attributeNames) {
+        this.attributeNames = attributeNames;
+    }
 }
