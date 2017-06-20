@@ -35,7 +35,7 @@ public abstract class DataOperationCommand extends DataOperationResult {
      * Mapping between the original attribute names
      * and the protected attribute names.
      */
-    protected Map<String,String> mapping;
+    protected Map<String, String> mapping;
 
     /**
      * Protected content. Formatted the same
@@ -47,7 +47,6 @@ public abstract class DataOperationCommand extends DataOperationResult {
      * Search criteria
      */
     protected Criteria[] criteria;
-
 
     public String[] getProtectedAttributeNames() {
         return protectedAttributeNames;
@@ -61,7 +60,7 @@ public abstract class DataOperationCommand extends DataOperationResult {
         return extraBinaryContent;
     }
 
-    public Map<String,String> getMapping() {
+    public Map<String, String> getMapping() {
         return mapping;
     }
 

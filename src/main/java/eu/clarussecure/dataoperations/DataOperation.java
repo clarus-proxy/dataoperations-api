@@ -52,5 +52,5 @@ public interface DataOperation {
      * @param attributeNames unprotected attribute names.
      * @return a List of Mapping objects.
      */
-    public List<Map<String,String>> head(String[] attributeNames);
+    public List<Map<String, String>> head(String[] attributeNames);
 }

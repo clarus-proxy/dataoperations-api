@@ -22,7 +22,6 @@ public abstract class DataOperationResult implements Serializable {
      */
     protected String[] attributeNames;
 
-
     public int getId() {
         return id;
     }
@@ -30,6 +29,5 @@ public abstract class DataOperationResult implements Serializable {
     public String[] getAttributeNames() {
         return attributeNames;
     }
-
 
 }
