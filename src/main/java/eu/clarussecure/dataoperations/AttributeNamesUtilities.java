@@ -46,11 +46,11 @@ public class AttributeNamesUtilities {
     }
 
     /**
-     * Resolves the request attribute names that contain asterisk (*) according
-     * to the attributes the protection module has to protect (i.e. the
-     * attributes which are defined in the security policy).
+     * Resolves the operation input attribute names that contain asterisk (*)
+     * according to the attributes the protection module has to protect (i.e.
+     * the attributes which are defined in the security policy).
      * <p>
-     * The request attribute names and the attributes to protect the must be
+     * The operation input attribute names and the attributes to protect must be
      * fully qualified (dataset/data/attribute). Any part of an attribute name
      * can contain an asterisk (i.e. dataset, data and/or attribute can be *)
      * <p>
@@ -58,40 +58,49 @@ public class AttributeNamesUtilities {
      * *&#47;patient/pat_id, *&#47;patient/pat_name, *&#47;patient/pat_last1,
      * *&#47;patient/pat_last2 </blockquote>
      * <p>
-     * The request attributes <code>*&#47;patient/*</code> is resolved to:
-     * <blockquote>
+     * The operation input attributes <code>*&#47;patient/*</code> are resolved
+     * to: <blockquote>
      *
      * *&#47;patient/pat_id, *&#47;patient/pat_name, *&#47;patient/pat_last1,
      * *&#47;patient/pat_last2
      *
      * </blockquote>
      * <p>
-     * The request attributes
+     * The operation input attributes
      * <code>*&#47;patient/pat_name, *&#47;patient/*, *&#47;patient/pat_id</code>
-     * is resolved to: <blockquote>
+     * are resolved to: <blockquote>
      *
      * *&#47;patient/pat_name, *&#47;patient/pat_id, *&#47;patient/pat_name,
      * *&#47;patient/pat_last1, *&#47;patient/pat_last2, *&#47;patient/pat_id
      *
      * </blockquote>
      * <p>
+     * The operation input attributes
+     * <code>*&#47;patient/pat_name, *&#47;episode/*, *&#47;patient/pat_id</code>
+     * are resolved to: <blockquote>
      *
-     * @param requestAttributeNames
-     *            the request attribute names to resolve.
+     * *&#47;patient/pat_name, *&#47;episode/*, *&#47;patient/pat_id
+     *
+     * </blockquote>
+     * <p>
+     *
+     * @param operationAttributeNames
+     *            the operation attribute names to resolve.
      * @param attributesToProtect
      *            the attribute the protection module protect (i.e. the
      *            attributes which are defined in the security policy)
-     * @return the resolved request attribute names
+     * @return the resolved operation attribute names
      */
-    public static String[] resolve(String[] requestAttributeNames, List<String> attributesToProtect) {
+    public static String[] resolveOperationAttributeNames(String[] operationAttributeNames,
+            List<String> attributesToProtect) {
         String[] resolvedAttributeNames;
-        if (Arrays.stream(requestAttributeNames).filter(an -> an.indexOf('*') != -1).count() == 0) {
+        if (Arrays.stream(operationAttributeNames).filter(an -> an.indexOf('*') != -1).count() == 0) {
             // Attribute names don't contain asterisk (*)
-            resolvedAttributeNames = requestAttributeNames;
+            resolvedAttributeNames = operationAttributeNames;
         } else {
             // Replace attribute names that contain asterisk (*) by the matching
             // data identifiers
-            List<Map.Entry<String, Pattern>> attributeNamePatterns = Arrays.stream(requestAttributeNames)
+            List<Map.Entry<String, Pattern>> attributeNamePatterns = Arrays.stream(operationAttributeNames)
                     .map(an -> new SimpleEntry<>(an, Pattern.compile(escapeRegex(an)))).collect(Collectors.toList());
             Stream<String> retainedDataIds = attributesToProtect.stream().filter(id -> id.indexOf('*') == -1);
             Stream<String> missingDataIds1 = attributesToProtect.stream()
@@ -99,7 +108,8 @@ public class AttributeNamesUtilities {
                     .map(m -> new String[] { m.group(1), m.group(2) }).flatMap(groups -> {
                         Pattern firstPartPattern = Pattern.compile(escapeRegex(groups[0]));
                         String lastPart = groups[1];
-                        return Arrays.stream(requestAttributeNames).map(an -> an.substring(0, an.lastIndexOf('/') + 1))
+                        return Arrays.stream(operationAttributeNames)
+                                .map(an -> an.substring(0, an.lastIndexOf('/') + 1))
                                 .filter(an -> firstPartPattern.matcher(an).matches()).map(an -> an + lastPart);
                     });
             Stream<String> missingDataIds2 = attributesToProtect.stream()
@@ -107,7 +117,7 @@ public class AttributeNamesUtilities {
                     .map(m -> new String[] { m.group(1), m.group(2) }).flatMap(groups -> {
                         Pattern firstPartPattern = Pattern.compile(escapeRegex(groups[0]));
                         String lastPart = groups[1];
-                        return Arrays.stream(requestAttributeNames).map(an -> an.substring(0, an.indexOf('/') + 1))
+                        return Arrays.stream(operationAttributeNames).map(an -> an.substring(0, an.indexOf('/') + 1))
                                 .filter(an -> firstPartPattern.matcher(an).matches()).map(an -> an + lastPart);
                     });
             List<String> dataIds = Stream.concat(retainedDataIds, Stream.concat(missingDataIds1, missingDataIds2))
@@ -137,6 +147,59 @@ public class AttributeNamesUtilities {
     public static String escapeRegex(String str) {
         return str.replace(".", "\\.").replace("[", "\\[").replace("]", "\\]").replace("(", "\\(").replace(")", "\\)")
                 .replace("*", "[^/]*");
+    }
+
+    /**
+     * Resolves a protected attribute name that contains asterisk (*) according
+     * to the operation input attribute name.
+     * <p>
+     * The protected attribute name and the operation input attribute name must
+     * be fully qualified (dataset/data/attribute). Any part of an attribute
+     * name can contain an asterisk (i.e. dataset, data and/or attribute can be
+     * *)
+     * <p>
+     * For example, with the following operation input attribute name:
+     * <blockquote> postgres/patient/pat_id, postgres/patient/pat_name,
+     * postgres/patient/pat_last1, postgres/patient/pat_last2 </blockquote>
+     * <p>
+     * The protected attribute name <code>*&#47;patient/pat_name</code> is
+     * resolved to: <blockquote>
+     *
+     * postgres/patient/pat_name
+     *
+     * </blockquote>
+     * <p>
+     * The protected attribute name <code>*&#47;*&#47;pat_name</code> is
+     * resolved to: <blockquote>
+     *
+     * postgres/patient/pat_name
+     *
+     * </blockquote>
+     * <p>
+     * The protected attribute name <code>*&#47;episode/ep_pat</code> is
+     * resolved to: <blockquote>
+     *
+     * *&#47;episode/ep_pat
+     *
+     * </blockquote>
+     *
+     * @param protectedAttributeName the protected attribute name to resolve
+     * @param attributeName the data operation input attribute name to use as a reference
+     * @return the protected attribute name resolved according to the reference
+     */
+    public static String resolveProtectedAttributeName(String protectedAttributeName, String attributeName) {
+        if (attributeName.chars().filter(c -> c == '/').count() == 2) {
+            // remove CSP prefix
+            protectedAttributeName = protectedAttributeName.substring(protectedAttributeName.indexOf('/') + 1);
+            if (START_WITH_DOUBLE_ASTERISKS.matcher(protectedAttributeName).matches()) {
+                protectedAttributeName = attributeName.substring(0, attributeName.lastIndexOf('/'))
+                        + protectedAttributeName.substring(protectedAttributeName.lastIndexOf('/'));
+            } else if (START_WITH_SINGLE_ASTERISK.matcher(protectedAttributeName).matches()) {
+                protectedAttributeName = attributeName.substring(0, attributeName.indexOf('/'))
+                        + protectedAttributeName.substring(protectedAttributeName.lastIndexOf('/'));
+            }
+        }
+        return protectedAttributeName;
     }
 
 }
