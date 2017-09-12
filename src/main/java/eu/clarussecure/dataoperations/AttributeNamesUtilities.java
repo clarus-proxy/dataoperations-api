@@ -33,16 +33,37 @@ public class AttributeNamesUtilities {
      * @return the fully qualified attribute names
      */
     public static List<String> fullyQualified(List<String> attributeNames) {
-        return attributeNames.stream()
-                .map(an -> an.indexOf('/') == -1
-                        // prepend with */*/ if there is no /
-                        ? "*/*/" + an
-                        : an.indexOf('/') == an.lastIndexOf('/')
-                                // prepend with */ if there is one /
-                                ? "*/" + an
-                                // do nothing if there is two /
-                                : an)
-                .collect(Collectors.toList());
+        return attributeNames.stream().map(an -> fullyQualified(an)).collect(Collectors.toList());
+    }
+
+    /**
+     * Replace unqualified attribute name by a generic qualified one (with
+     * asterisks): <blockquote>
+     *
+     * <pre>
+     *
+     * attribute1 -> *&#47*&#47attribute1
+     * data/attribute2 -> *&#47data/attribute2
+     * dataset/data/attribute3 -> dataset/data/attribute3
+     *
+     * </pre>
+     *
+     * </blockquote>
+     * <p>
+     *
+     * @param attributeName
+     *            the (potentially unqualified) attribute name
+     * @return the fully qualified attribute name
+     */
+    public static String fullyQualified(String attributeName) {
+        return attributeName.indexOf('/') == -1
+                // prepend with */*/ if there is no /
+                ? "*/*/" + attributeName
+                : attributeName.indexOf('/') == attributeName.lastIndexOf('/')
+                        // prepend with */ if there is one /
+                        ? "*/" + attributeName
+                        // do nothing if there is two /
+                        : attributeName;
     }
 
     /**
