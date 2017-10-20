@@ -1,6 +1,7 @@
 package eu.clarussecure.dataoperations;
 
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * Parent class for data objects returned by several
@@ -28,13 +29,13 @@ public abstract class DataOperationCommand extends DataOperationResult {
      * data is the responsibility of the module
      * developer.
      */
-    protected InputStream extraBinaryContent;
+    protected InputStream[] extraBinaryContent;
 
     /**
      * Mapping between the original attribute names
      * and the protected attribute names.
      */
-    protected Mapping mapping;
+    protected Map<String, String> mapping;
 
     /**
      * Protected content. Formatted the same
@@ -47,7 +48,6 @@ public abstract class DataOperationCommand extends DataOperationResult {
      */
     protected Criteria[] criteria;
 
-
     public String[] getProtectedAttributeNames() {
         return protectedAttributeNames;
     }
@@ -56,11 +56,11 @@ public abstract class DataOperationCommand extends DataOperationResult {
         return extraProtectedAttributeNames;
     }
 
-    public InputStream getExtraBinaryContent() {
+    public InputStream[] getExtraBinaryContent() {
         return extraBinaryContent;
     }
 
-    public Mapping getMapping() {
+    public Map<String, String> getMapping() {
         return mapping;
     }
 
@@ -70,5 +70,29 @@ public abstract class DataOperationCommand extends DataOperationResult {
 
     public String[][] getProtectedContents() {
         return protectedContents;
+    }
+
+    public void setProtectedAttributeNames(String[] protectedAttributeNames) {
+        this.protectedAttributeNames = protectedAttributeNames;
+    }
+
+    public void setExtraProtectedAttributeNames(String[] extraProtectedAttributeNames) {
+        this.extraProtectedAttributeNames = extraProtectedAttributeNames;
+    }
+
+    public void setExtraBinaryContent(InputStream[] extraBinaryContent) {
+        this.extraBinaryContent = extraBinaryContent;
+    }
+
+    public void setMapping(Map<String, String> mapping) {
+        this.mapping = mapping;
+    }
+
+    public void setProtectedContents(String[][] protectedContents) {
+        this.protectedContents = protectedContents;
+    }
+
+    public void setCriteria(Criteria[] criteria) {
+        this.criteria = criteria;
     }
 }

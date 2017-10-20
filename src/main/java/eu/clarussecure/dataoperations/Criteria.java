@@ -10,7 +10,7 @@ public class Criteria implements Serializable {
     private String operator;
     private String value;
 
-    public Criteria (String attributeName, String operator, String value) {
+    public Criteria(String attributeName, String operator, String value) {
         this.attributeName = attributeName;
         this.operator = operator;
         this.value = value;
